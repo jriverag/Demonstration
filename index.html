@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Demostration Application</title>
+    <link rel="stylesheet" type="text/css" href="styles/demostyle.css" />
+    <script src="js/demoscripts.js"></script>
+</head>
+
+<body>
+    <h1>Demostration Application</h1>
+    <hr>
+    <section id="menu">
+        <select onchange="MenuSelect()" id="menuitems">
+            <option>Please Select an Item</option>
+            <option>About</option>
+            <option>Add Data</option>
+            <option>Change Data</option>
+            <option>Delete Data</option>
+            <option>List Data</option>
+        </select>
+        <hr>
+    </section>
+    <section id="about">
+        <h3>Demonstration Application</h3>
+        <p>This is a demonstration application for the IS 633 & IS 491 class.</p>
+        <br>
+        <img src="images/skc.jpg">
+    </section>
+    <section id="add">
+        <h3>Add a Customer</h3>
+    </section>
+    <section id="change">
+        <h3>Change a Customer Order Shipping Address</h3>
+    </section>
+    <section id="delete">
+        <h3>Delete a Customer</h3>
+    </section>
+    <section id="list">
+        <h3>List Customers</h3>
+        <button onclick="ListCustomers()" id="listcustomers">List Customers</button>
+        <br>
+        <p id="listcustomers">Customer List</p>
+    </section>
+
+
+
+</body>
+</html>
