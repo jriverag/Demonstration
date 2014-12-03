@@ -35,28 +35,97 @@ function MenuSelect()
 }
 
 function ListCustomers()
-        {
-            var xmlhttp = new XMLHttpRequest();
-            var url = "http://bus-pluto.ad.uab.edu/jsonwebservice/service1.svc/getAllCustomers";
+{
+    var xmlhttp = new XMLHttpRequest();
+    var url = "http://bus-pluto.ad.uab.edu/jsonwebservice/service1.svc/getAllCustomers";
              
+    xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var output = JSON.parse(xmlhttp.responseText);
+        GenerateOutput(output);
+        }
+    }
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+            
+    function GenerateOutput(result)
+    {
+        var display = "<table><tr><th>City</th><th>Company Name</th><th>Customer ID</th></tr>";
+        var count = 0;
+        var rowid = "oddrow";
+        for(count = 0; count < result.GetAllCustomersResult.length; count ++)
+        {
+            if (count%2 == 0)
+            {
+                rowid = "evenrow";
+            }
+            else
+            {
+                rowid = "oddrow";
+            }
+            display += "<tr id=" + rowid + "><td>" + result.GetAllCustomersResult[count].City + "</td><td>" + result.GetAllCustomersResult[count].CompanyName + "</td><td>" + result.GetAllCustomersResult[count].CustomerID + "</td></tr>";
+        }
+        display += "</table>";
+        document.getElementById("listcustomers").innerHTML = display;
+        }
+}
+        
+function CreateCustomer()
+{
+    var objajax = new XMLHttpRequest();
+    var url = "http://bus-pluto.ad.uab.edu/jsonwebservice/service1.svc/CreateCustomer";
+    //customer data from web page
+    var customerid = document.getElementById("custid").value;
+    var customername = document.getElementById("custname").value;
+    var customercity = document.getElementById("custcity").value;
+    var objdisplay = document.getElementById("result");
+    //Create parameter string
+    var newcustomer = '{"CustomerID":"' + customerid + '","CompanyName":"' + customername + '","City":"' + customercity + '"}';
+    
+    //Checking for AJAX operation return
+    objajax.onreadystatechange = function()
+    {
+        if (objajax.readyState == 4 && objajax.status == 200)
+        {
+            var result = JSON.parse(objajax.responseText);
+            var outcome = result.WasSuccessful
+            var error = result.Exception;
+            OperationResult(outcome, error, objdisplay);
+        }
+    }
+    //Start AJAX operation
+    objajax.open("POST", url, true);
+    objajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    objajax.send(newcustomer);
+}
+
+function OperationResult(success, exception, displayObject)
+{
+    if (success == 1)
+    {
+        displayObject.innerHTML = "The operation was successful!";
+    }
+    else
+    {
+        displayObject.innerHTML = "The operation was not successful:<br>" + exception;
+    }
+}
+
+function DeleteCustomer()
+       {
+            var xmlhttp = new XMLHttpRequest();
+            var url = "http://bus-pluto.ad.uab.edu/jsonwebservice/service1.svc/deleteCustomer/";
+            url += document.getElementById("deleteid").value;
+            var objdisplay = document.getElementById("deleteresult");
+                        
             xmlhttp.onreadystatechange = function() {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     var output = JSON.parse(xmlhttp.responseText);
-                    GenerateOutput(output);
+                    var outcome = output.DeleteCustomerResult.WasSuccessful
+                    var error = output.DeleteCustomerResult.Exception;
+                    OperationResult(outcome, error, objdisplay);
                 }
             }
             xmlhttp.open("GET", url, true);
             xmlhttp.send();
-            
-            function GenerateOutput(result)
-            {
-            var display = "<table><tr><th>City</th><th>Company Name</th><th>Customer ID</th></tr>";
-            var count = 0;
-            for(count = 0; count < result.GetAllCustomersResult.length; count ++)
-            {
-                display += "<tr><td>" + result.GetAllCustomersResult[count].City + "</td><td>" + result.GetAllCustomersResult[count].CompanyName + "</td><td>" + result.GetAllCustomersResult[count].CustomerID + "</td></tr>";
-            }
-            display += "</table>";
-            document.getElementById("listcustomers").innerHTML = display;
-            }
         }

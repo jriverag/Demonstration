@@ -29,17 +29,55 @@
     </section>
     <section id="add">
         <h3>Add a Customer</h3>
+        <br>
+        <table><tr><th>New Customer Data</th></tr>
+        <tr><td class="caption">Please enter the Customer ID:</td>
+        <td><input type="text" id="custid"></td>
+        <td><label class="warning">The Customer ID is five uppercase characters.</label></td></tr>
+        <tr>
+        <td class="caption">Please enter the Customer Name:</td>
+        <td><input type="text" id="custname"></td>
+        </tr>
+        <tr>
+        <td class="caption">Please enter the Customer City:</td>
+        <td><input type="text" id="custcity"></td>
+        </tr>
+        <tr>
+        <td><button onclick="CreateCustomer()">Add a New Customer</button></td>
+        </tr>
+        </table>    
+        <label id="result">The result will display here.</label>
     </section>
     <section id="change">
         <h3>Change a Customer Order Shipping Address</h3>
     </section>
     <section id="delete">
         <h3>Delete a Customer</h3>
+        <br>
+        <table>
+            <tr>
+                <td class="caption">
+                    Please enter the Customer ID for the Customer you wish to delete:
+                </td>
+                <td>
+                    <input type="text" id="deleteid">
+                </td>
+            </tr>
+            <tr>
+                <td class="warning">
+                    Deletion is a final action and will permanently delete a customer's data!
+                </td>
+                <td>
+                    <button onclick="DeleteCustomer()">Delete Customer</button>
+                </td>
+            </tr>
+        </table>
+        <label id="deleteresult">The result will display here.</label>
     </section>
     <section id="list">
         <h3>List Customers</h3>
         <button onclick="ListCustomers()" id="listcustomers">List Customers</button>
-        <br>
+        <hr>
         <p id="listcustomers">Customer List</p>
     </section>
 
