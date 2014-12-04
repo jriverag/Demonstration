@@ -18,6 +18,10 @@ img {float: left; height: 25%; width: 25%; box-shadow: 10px 10px 5px 5px;}
 
 #list {background-color: #FFCC99; overflow: scroll; visibility: hidden; position: absolute; height: 75%; width: 100%;}
 
+#history {background-color: #FFCC99; overflow: scroll; visibility: hidden; position: absolute; height: 75%; width: 100%;}
+
+#orders {background-color: #FFCC99; overflow: scroll; visibility: hidden; position: absolute; height: 75%; width: 100%;}
+
 #listcustomers {width: 100%; }
 
 table {border: inset; padding: 10px; background-color: white; overflow: scroll;}

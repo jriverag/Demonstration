@@ -5,6 +5,8 @@ function MenuSelect()
     document.getElementById("change").style.visibility = "hidden";
     document.getElementById("delete").style.visibility = "hidden";
     document.getElementById("list").style.visibility = "hidden";
+    document.getElementById("history").style.visibility = "hidden";
+    document.getElementById("orders").style.visibility = "hidden";
     
     var selection = document.getElementById("menuitems").value;
     
@@ -16,17 +18,23 @@ function MenuSelect()
         case "About":
             document.getElementById("about").style.visibility = "visible";
             break;
-        case "Add Data":
+        case "Add a Customer":
             document.getElementById("add").style.visibility = "visible";
             break;
-        case "Change Data":
+        case "Change Order Shipping Address":
             document.getElementById("change").style.visibility = "visible";
             break;
-        case "Delete Data":
+        case "Delete a Customer":
             document.getElementById("delete").style.visibility = "visible";
             break;
-        case "List Data":
+        case "List Customers":
             document.getElementById("list").style.visibility = "visible";
+            break;
+        case "Customer Order History":
+            document.getElementById("history").style.visibility = "visible";
+            break;
+        case "Customer Orders":
+            document.getElementById("orders").style.visibility = "visible";
             break;
         default:
             alert("Please select a different menu option");
@@ -101,14 +109,31 @@ function CreateCustomer()
 
 function OperationResult(success, exception, displayObject)
 {
-    if (success == 1)
+    switch (success)
     {
-        displayObject.innerHTML = "The operation was successful!";
+        case 1:
+            displayObject.innerHTML = "The operation was successful!";
+            break;
+        case 0:
+            displayObject.innerHTML = "The operation was not successful:<br>" + exception;
+            break;
+        case -2:
+            displayObject.innerHTML = "The operation was not successful because the data string supplied could not be deserialized into the service object.";
+            break;
+        case -3:
+            displayObject.innerHTML = "The operation was not successful because a record with the supplied Order ID could not be found";
+            break;
+        default:
+            alert("The operation code returned is not identifiable.");
     }
-    else
-    {
-        displayObject.innerHTML = "The operation was not successful:<br>" + exception;
-    }
+    //if (success == 1)
+    //{
+    //    displayObject.innerHTML = "The operation was successful!";
+    //}
+    //else
+    //{
+    //    displayObject.innerHTML = "The operation was not successful:<br>" + exception;
+    //}
 }
 
 function DeleteCustomer()
@@ -129,3 +154,99 @@ function DeleteCustomer()
             xmlhttp.open("GET", url, true);
             xmlhttp.send();
         }
+        
+function History()
+            {
+            var xmlhttp = new XMLHttpRequest();
+            var url = "http://bus-pluto.ad.uab.edu/jsonwebservice/service1.svc/getCustomerOrderHistory/";
+            url += document.getElementById("historyid").value;
+                        
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var output = JSON.parse(xmlhttp.responseText);
+                    GenerateOutput(output);
+                }
+            }
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+            
+            function GenerateOutput(result)
+            {
+            var display = "<table><tr><th>Product Name</th><th>Total</th></tr>";
+            var count = 0;
+            for(count = 0; count < result.length; count ++)
+            {
+                if (count%2 == 0)
+                {
+                    rowid = "evenrow";
+                }
+                else
+                {
+                    rowid = "oddrow";
+                }
+                display += "<tr id=" + rowid + "><td>" + result[count].ProductName + "</td><td>" + result[count].Total + "</td></tr>";
+            }
+            display += "</table>";
+            document.getElementById("custhist").innerHTML = display;
+            }
+        }
+        
+function Orders()
+    {
+        var xmlhttp = new XMLHttpRequest();
+            var url = "http://bus-pluto.ad.uab.edu/jsonwebservice/service1.svc/getOrdersForCustomer/";
+            url += document.getElementById("orderid").value;
+                        
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var output = JSON.parse(xmlhttp.responseText);
+                    GenerateOutput(output);
+                }
+            }
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+            
+            function GenerateOutput(result)
+            {
+            var display = "<table><tr><th>Order Date</th><th>Order ID</th><th>Ship Address</th><th>Ship City</th><th>Ship Name</th><th>Ship Post Code</th><th>Shipped Date</th></tr>";
+            var count = 0;
+            for(count = 0; count < result.GetOrdersForCustomerResult.length; count ++)
+            {
+                if (count%2 == 0)
+                {
+                    rowid = "evenrow";
+                }
+                else
+                {
+                    rowid = "oddrow";
+                }
+                display += "<tr id=" + rowid + "><td>" + result.GetOrdersForCustomerResult[count].OrderDate + "</td><td>" + result.GetOrdersForCustomerResult[count].OrderID + "</td><td>" + result.GetOrdersForCustomerResult[count].ShipAddress + "</td><td>" + result.GetOrdersForCustomerResult[count].ShipCity + "</td><td>" + result.GetOrdersForCustomerResult[count].ShipName + "</td><td>" + result.GetOrdersForCustomerResult[count].ShipPostcode + "</td><td>" + result.GetOrdersForCustomerResult[count].ShippedDate + "</td></tr>";
+            }
+            display += "</table>";
+            document.getElementById("orderlist").innerHTML = display;
+            }
+    }
+    
+function AddressUpdate()
+    {
+        var xmlhttp = new XMLHttpRequest();
+        var objdisplay = document.getElementById("changeresult");
+        xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var output = JSON.parse(xmlhttp.responseText);
+                    OperationResult(output, "", objdisplay);
+                }
+        }    
+        var url = "http://bus-pluto.ad.uab.edu/jsonwebservice/service1.svc/updateOrderAddress";
+        var orderid = Number(document.getElementById("orderID").value);
+        var shipname = document.getElementById("shipName").value;
+        var shipaddress = document.getElementById("shipAddress").value;
+        var shipcity = document.getElementById("shipCity").value;
+        var shippostcode = document.getElementById("shipPostcode").value;
+        
+        var parameters = '{"OrderID":' + orderid + ',"ShipName":"' + shipname + '","ShipAddress":"' + shipaddress + '","ShipCity":"' + shipcity + '","ShipPostcode":"' + shippostcode + '"}';
+                
+        xmlhttp.open("POST", url, true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(parameters);
+    }

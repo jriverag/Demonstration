@@ -14,10 +14,12 @@
         <select onchange="MenuSelect()" id="menuitems">
             <option>Please Select an Item</option>
             <option>About</option>
-            <option>Add Data</option>
-            <option>Change Data</option>
-            <option>Delete Data</option>
-            <option>List Data</option>
+            <option>List Customers</option>
+            <option>Customer Order History</option>
+            <option>Change Order Shipping Address</option>
+            <option>Add a Customer</option>
+            <option>Delete a Customer</option>
+            <option>Customer Orders</option>
         </select>
         <hr>
     </section>
@@ -26,6 +28,18 @@
         <p>This is a demonstration application for the IS 633 & IS 491 class.</p>
         <br>
         <img src="images/skc.jpg">
+    </section>
+    <section id="history">
+        <input type="text" id="historyid">
+        <button onclick="History()" id="CustOrders">Customer Order History</button>
+        <br>
+        <label id="custhist">Customer history will display here.</label>
+    </section>
+    <section id="orders">
+        <input type="text" id="orderid">
+        <button onclick="Orders()">Customer Orders</button>
+        <br>
+        <label id="orderlist">Customer orders will display here.</label>
     </section>
     <section id="add">
         <h3>Add a Customer</h3>
@@ -50,6 +64,15 @@
     </section>
     <section id="change">
         <h3>Change a Customer Order Shipping Address</h3>
+        <hr>
+        <label>Order ID</label> <input type="number" id="orderID"><br>
+        <label>Ship Name</label> <input type="text" id="shipName"><br>
+        <label>Ship Address</label> <input type="text" id="shipAddress"><br>
+        <label>Ship City</label> <input type="text" id="shipCity"><br>
+        <label>Ship Post Code</label> <input type="text" id="shipPostcode"><br>
+        <button onclick="AddressUpdate()" id="update">Update Shipping Address</button>
+        <br>
+        <label id="changeresult">The operation's result will display here.</label>
     </section>
     <section id="delete">
         <h3>Delete a Customer</h3>
